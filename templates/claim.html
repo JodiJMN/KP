@@ -1,0 +1,108 @@
+{% include 'header.html' %}
+
+<!--begin::App Main-->
+<main class="app-main" style="display: flex;">
+  <div class="app-content-header">
+    <!--begin::Container-->
+    <div class="container-fluid">
+      <!--begin::Row Header-->
+      <div class="row">
+        <div class="col-sm-6">
+          <h3 class="mb-0">Claim Handling</h3>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-end">
+            <li class="breadcrumb-item">
+              <a href="/formclaim" class="btn btn-sm btn-primary">Add Claim</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">Claim</li>
+          </ol>
+        </div>
+      </div>
+      <!--end::Row Header-->
+      <!-- Begin Content -->
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card mb-0">
+            <div class="card-header">
+              <!-- /.card-header -->
+              <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                  <thead class="text-center">
+                    <tr>
+                      <th>Claim ID</th>
+                      <th>Claim Status</th>
+                      <th>Claim Number</th>
+                      <th>Claim Inisiator</th>
+                      <th>Claim Type</th>
+                      <th>Terminal</th>
+                      <th>No. Acq</th>
+                      <th>No. PAN</th>
+                      <th>No. Resi</th>
+                      <th>Transaction Date</th>
+                      <th>Transcation Time</th>
+                      <th>Due Date</th>
+                      <th>Claim Date</th>
+                      <th>Transcation Amount</th>
+                      <th>Description</th>
+                      <th>User</th>
+                      <th>Reference</th>
+                      <th>Week Report</th>
+                      <th>Close Claim</th>
+                      <th>BIN</th>
+                      <th>Routing</th>
+                      <th>Claim Entry BOA</th>
+                      <th>Remarks</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for rs in data%}
+                    <tr class="align-middle">
+                      <td>{{ rs.0 }}</td>
+                      <td><span class="badge {{ status_class(rs.1) }}">{{ rs.1 }}</span></td>
+                      <td>{{ rs.2 }}</td>
+                      <td>{{ rs.3 }}</td>
+                      <td>{{ rs.4 }}</td>
+                      <td>{{ rs.5 }}</td>
+                      <td>{{ rs.6 }}</td>
+                      <td>{{ rs.7 }}</td>
+                      <td>{{ rs.8 }}</td>
+                      <td>{{ rs.9 }}</td>
+                      <td>{{ rs.10 }}</td>
+                      <td>{{ rs.11}}</td>
+                      <td>{{ rs.12 }}</td>
+                      <td>{{ rs.13 }}</td>
+                      <td>{{ rs.14 }}</td>
+                      <td>{{ rs.15 }}</td>
+                      <td>{{ rs.16 }}</td>
+                      <td>{{ rs.17 }}</td>
+                      <td>{{ rs.18 }}</td>
+                      <td>{{ rs.19 }}</td>
+                      <td>{{ rs.20 }}</td>
+                      <td>{{ rs.21 }}</td>
+                      <td>{{ rs.22 }}</td>
+                      <td>
+                        <a href="{{ url_for('klaim.update', claim_id=rs.0) }}" class="btn btn-sm btn-warning mb-2">Update</a>
+
+                        {% if session['role'] == 'admin' %}
+                        <a href="{{ url_for('klaim.delete_claim', claim_id=rs.0) }}" class="btn btn-sm btn-danger"
+                          onclick="return confirm('Are you sure you want to delete this claim?')">Delete</a>
+                        {% endif %}
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End Content -->
+      </div>
+      <!--end::Container-->
+    </div>
+</main>
+<!--end::App Main-->
+
+{% include 'footer.html' %}

@@ -1,0 +1,23 @@
+{% include 'header.html' %}
+
+<!--begin::App Main-->
+<main class="app-main" style="display: flex; justify-content: center; align-items: center;">
+  <!--begin::Brand Image-->
+  <div>
+    <img src="{{ url_for('static', filename='dist/assets/img/atmi-logo-small.png') }}" alt="AdminLTE Logo"
+      class="brand-image center-logo  mb-5" style="transform: scale(1.2);" />
+  </div>
+  <!--end::Brand Image-->
+  <div>
+    <p style="font-size: 3rem; font-weight: bold;">
+      <a href="https://atm-intl.com" target="_blank" style="text-decoration: none; color: inherit;">
+        PT Abadi Tambah Mulia Internasional (ATMi)
+      </a>
+    </p>
+  </div>
+
+</main>
+<!--end::App Main-->
+
+
+{% include 'footer.html' %}

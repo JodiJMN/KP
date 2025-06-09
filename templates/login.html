@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - ATMi</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='dist/css/adminlte.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url("{{ url_for('static', filename='dist/assets/img/background.jpg') }}");
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .container h2 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+
+        .forgot-password {
+            display: block;
+            text-align: right;
+            font-size: 14px;
+            color: #555;
+            text-decoration: none;
+        }
+
+        .login-button {
+            background-color: #0d5c95;
+            color: #fff;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo img {
+            max-width: 150px;
+        }
+
+        .social-icons {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .social-icons i {
+            margin: 0 10px;
+            color: #0d5c95;
+            font-size: 20px;
+            cursor: pointer;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="{{ url_for('static', filename='dist/assets/img/atmi-logo-small.png') }}" alt="Logo ATMi">
+        </div>
+        <h2>Login</h2>
+        <form action="{{ url_for('klaim.login')}}" method="POST">
+            <div class="form-group">
+                <input type="text" class="form-control" id="username" name="username" placeholder="Username"
+                    autocomplete="off" required>
+            </div>
+            <div class="form-group">
+                <input type="password" class="form-control" id="password" name="password" placeholder="Password"
+                    autocomplete="off" required>
+            </div>
+            <button type="submit" class="login-button mb-3">LOGIN</button>
+            <div>
+                <a href="#" class="forgot-password">Forgot Your Password ?</a>
+            </div>
+        </form>
+    </div>
+    
+</body>
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% for category, message in messages %}
+    <script>
+      Swal.fire({
+        icon: "{{ 'error' if category == 'danger' else category }}",
+        text: "{{ message }}",
+        timer: 2000,
+        showConfirmButton: false,
+        toast: true,
+        position: 'top-end',
+        timerProgressBar: true,
+        showClass: {
+          popup: 'swal2-show swal2-animate-fade-in'
+        },
+        hideClass: {
+          popup: 'swal2-hide swal2-animate-fade-out'
+        },
+        customClass: {
+          popup: 'small-alert'
+        }
+      });
+    </script>
+  {% endfor %}
+{% endwith %}
+</html>

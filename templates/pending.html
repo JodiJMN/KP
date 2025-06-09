@@ -1,0 +1,95 @@
+{% include 'header.html' %}
+
+<!--begin::App Main-->
+<main class="app-main" style="display: flex;">
+  <div class="app-content-header">
+    <!--begin::Container-->
+    <div class="container-fluid">
+      <!--begin::Row Header-->
+      <div class="row">
+        <div class="col-sm-6 mb-3">
+          <h3 class="mb-0">Pending List</h3>
+        </div>
+      </div>
+      <!--end::Row Header-->
+      <!-- Begin Content -->
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card mb-0">
+            <div class="card-header">
+              <!-- /.card-header -->
+              <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                  <thead class="text-center">
+                    <tr>
+                      <th>Claim ID</th>
+                      <th>Claim Status</th>
+                      <th>Claim Number</th>
+                      <th>Claim Inisiator</th>
+                      <th>Claim Type</th>
+                      <th>Terminal</th>
+                      <th>No. Acq</th>
+                      <th>No. PAN</th>
+                      <th>No. Resi</th>
+                      <th>Transaction Date</th>
+                      <th>Transcation Time</th>
+                      <th>Due Date</th>
+                      <th>Claim Date</th>
+                      <th>Transcation Amount</th>
+                      <th>Description</th>
+                      <th>User</th>
+                      <th>Reference</th>
+                      <th>Week Report</th>
+                      <th>Close Claim</th>
+                      <th>BIN</th>
+                      <th>Routing</th>
+                      <th>Claim Entry BOA</th>
+                      <th>Remarks</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for rs in data%}
+                    {% if rs.1.lower() not in ['solved','reject', 'close by acq', 'close by system', 'close success',
+                    'rejected
+                    by acq', 'cancelled by alto'] %}
+                    <tr class="align-middle">
+                      <td>{{ rs.0 }}</td>
+                      <td><span class="badge {{ status_class(rs.1) }}">{{ rs.1 }}</span></td>
+                      <td>{{ rs.2 }}</td>
+                      <td>{{ rs.3 }}</td>
+                      <td>{{ rs.4 }}</td>
+                      <td>{{ rs.5 }}</td>
+                      <td>{{ rs.6 }}</td>
+                      <td>{{ rs.7 }}</td>
+                      <td>{{ rs.8 }}</td>
+                      <td>{{ rs.9 }}</td>
+                      <td>{{ rs.10 }}</td>
+                      <td>{{ rs.11}}</td>
+                      <td>{{ rs.12 }}</td>
+                      <td>{{ rs.13 }}</td>
+                      <td>{{ rs.14 }}</td>
+                      <td>{{ rs.15 }}</td>
+                      <td>{{ rs.16 }}</td>
+                      <td>{{ rs.17 }}</td>
+                      <td>{{ rs.18 }}</td>
+                      <td>{{ rs.19 }}</td>
+                      <td>{{ rs.20 }}</td>
+                      <td>{{ rs.21 }}</td>
+                      <td>{{ rs.22 }}</td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End Content -->
+      </div>
+      <!--end::Container-->
+    </div>
+</main>
+<!--end::App Main-->
+
+{% include 'footer.html' %}
