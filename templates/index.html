@@ -1,23 +1,131 @@
 {% include 'header.html' %}
 
-<!--begin::App Main-->
-<main class="app-main" style="display: flex; justify-content: center; align-items: center;">
-  <!--begin::Brand Image-->
-  <div>
-    <img src="{{ url_for('static', filename='dist/assets/img/atmi-logo-small.png') }}" alt="AdminLTE Logo"
-      class="brand-image center-logo  mb-5" style="transform: scale(1.2);" />
-  </div>
-  <!--end::Brand Image-->
-  <div>
-    <p style="font-size: 3rem; font-weight: bold;">
-      <a href="https://atm-intl.com" target="_blank" style="text-decoration: none; color: inherit;">
-        PT Abadi Tambah Mulia Internasional (ATMi)
-      </a>
-    </p>
-  </div>
+<main class="app-main py-4">
+  <div class="container">
+    <h2 class="mb-4 fw-bold">Claim Dashboard</h2>
+    {% if session['role'] == 'admin' %}
+      <div class="mb-3 text-end">
+        <a href="{{ url_for('klaim.send_due_email') }}" class="btn btn-outline-danger">
+          <i class="bi bi-envelope-fill"></i> Kirim Email Due Date Sekarang
+        </a>
+      </div>
+    {% endif %} 
 
+    <!-- Data Claims -->
+    {% set claims = [
+      {'label': 'Active', 'count': active_count, 'color': '#00C853'},
+      {'label': 'Not Yet Inputted', 'count': notyet_count, 'color': '#00BFA5'},
+      {'label': 'Pending', 'count': pending_count, 'color': '#FFEB3B'},
+      {'label': 'Waiting Approval', 'count': wait_approval_count, 'color': '#F2BF26'},
+      {'label': 'Cancelled', 'count': cancelled_count, 'color': '#FF0000'},
+      {'label': 'Reject', 'count': rejected_count, 'color': '#090040'},
+      {'label': 'On Process', 'count': onprocess_count, 'color': '#0DC7B7'},
+      {'label': 'Closed', 'count': closed_count, 'color': '#D605D2'}
+    ] %}
+
+    {% if due_soon_claims %}
+      <div class="alert alert-warning text-center">
+        <strong><i class="bi bi-exclamation-triangle-fill"></i> {{ due_soon_claims|length }} klaim</strong> akan jatuh tempo hari ini atau besok.
+        <a href="{{ url_for('klaim.pending') }}" class="btn btn-sm btn-outline-danger ms-2">Tinjau</a>
+      </div>
+    {% endif %}
+
+    <!-- Summary Cards -->
+    <div class="row g-4">
+      {% for claim in claims %}
+        <div class="col-md-3">
+          <a href="{{ url_for('klaim.tickets_by_status', status=claim.label) }}" class="text-decoration-none">
+            <div class="p-4 rounded text-center shadow-lg"
+                style="background-color: {{ claim.color }}; color: white; transition: transform 0.2s;"
+                onmouseover="this.style.transform='scale(1.05)';"
+                onmouseout="this.style.transform='scale(1)';">
+              <div class="fw-semibold">{{ claim.label }}</div>
+              <div class="fs-3 fw-bold">{{ claim.count }}</div>
+            </div>
+          </a>
+        </div>
+      {% endfor %}
+    </div>
+
+    <!-- Charts -->
+    <div class="row mt-5">
+      <div class="col-md-6">
+        <div class="card card-body shadow">
+          <h5 class="text-center">Claim Status Distribution</h5>
+          <div id="status-chart"></div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card card-body shadow">
+          <h5 class="text-center">Claim Type Distribution</h5>
+          <div id="type-chart"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 </main>
-<!--end::App Main-->
+
+<!-- Chart Library -->
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script>
+  {% if claims %}
+    const claimData = {{ claims | tojson }};
+  {% else %}
+    const claimData = [];
+  {% endif %}
+
+  const labels = claimData.map(c => c.label);
+  const values = claimData.map(c => c.count);
+  const colors = claimData.map(c => c.color);
+
+  // Donut Chart (Type Distribution)
+  const donutOptions = {
+    chart: {
+      type: 'donut',
+      height: 300
+    },
+    labels: labels,
+    series: values,
+    colors: colors
+  };
+  new ApexCharts(document.querySelector("#type-chart"), donutOptions).render();
+
+  // Bar Chart (Status Distribution)
+  const barOptions = {
+    chart: {
+      type: 'bar',
+      height: 300
+    },
+    series: [{
+      name: 'Jumlah',
+      data: values
+    }],
+    xaxis: {
+      categories: labels
+    },
+    plotOptions: {
+      bar: {
+        distributed: true
+      }
+    },
+    colors: colors
+  };
+  new ApexCharts(document.querySelector("#status-chart"), barOptions).render();
+</script>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% for category, message in messages %}
+    <script>
+      Swal.fire({
+        icon: "{{ 'success' if category == 'success' else 'error' }}",
+        title: "{{ category.capitalize() }}",
+        text: "{{ message }}",
+        timer: 2500,
+        showConfirmButton: false
+      });
+    </script>
+  {% endfor %}
+{% endwith %}
 
 
 {% include 'footer.html' %}

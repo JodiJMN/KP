@@ -1,25 +1,81 @@
 {% include 'header.html' %}
 
-<!--begin::App Main-->
-<main class="app-main" style="display: flex;">
-        <div class="app-content-header">
-          <!--begin::Container-->
-          <div class="container-fluid">
-            <!--begin::Row-->
-            <div class="row">
-              <div class="col-sm-6"><h3 class="mb-0">Claim Reports</h3></div>
-              <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-end">
-                  <li class="breadcrumb-item"><a href="/">Home</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Reports</li>
-                </ol>
-              </div>
-            </div>
-            <!--end::Row-->
-          </div>
-          <!--end::Container-->
-        </div>
+<main class="app-main py-4">
+  <div class="container">
+    <h3 class="mb-3">Report Data Klaim</h3>
+
+    <!-- Filter -->
+    <form method="get" class="row g-3 mb-4">
+      <div class="col-md-3">
+        <label>Status Klaim</label>
+        <select name="status" class="form-select">
+          <option value="">-- Semua Status --</option>
+          {% for status in all_status %}
+            <option value="{{ status }}" {% if selected_status == status %}selected{% endif %}>{{ status }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-3">
+        <label>Tipe Klaim</label>
+        <select name="type" class="form-select">
+          <option value="">-- Semua Tipe --</option>
+          {% for tipe in all_types %}
+            <option value="{{ tipe }}" {% if selected_type == tipe %}selected{% endif %}>{{ tipe }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-3">
+        <label>Dari Tanggal</label>
+        <input type="date" name="start_date" class="form-control" value="{{ start_date }}">
+      </div>
+      <div class="col-md-3">
+        <label>Sampai Tanggal</label>
+        <input type="date" name="end_date" class="form-control" value="{{ end_date }}">
+      </div>
+      <div class="col-12 text-end">
+        <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i> Tampilkan</button>
+        <a href="{{ url_for('klaim.export_klaim', status=selected_status, type=selected_type, start_date=start_date, end_date=end_date) }}" class="btn btn-success">
+          <i class="bi bi-file-excel"></i> Export Excel
+        </a>
+      </div>
+    </form>
+
+    <!-- Table -->
+    <div class="card shadow-sm">
+      <div class="card-body table-responsive">
+        <table class="table table-bordered text-center table-striped">
+          <thead class="table-primary">
+            <tr>
+              <th>ID</th>
+              <th>Status</th>
+              <th>Claim Number</th>
+              <th>Claim Inisiator</th>
+              <th>Tipe</th>
+              <th>Tgl Klaim</th>
+              <th>Due Date</th>
+              <th>Amount</th>
+              <th>User</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in data %}
+            <tr>
+              <td>{{ row[0] }}</td>
+              <td><span class="badge {{ status_class(row[1]) }}">{{ row[1] }}</span></td>
+              <td>{{ row[2] }}</td>
+              <td>{{ row[3] }}</td>
+              <td>{{ row[4] }}</td>
+              <td>{{ row[12] }}</td>
+              <td>{{ row[11] }}</td>
+              <td>Rp {{ format_rupiah(row[13]) }}</td>
+              <td>{{ row[15] }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </main>
-<!--end::App Main-->
 
 {% include 'footer.html' %}

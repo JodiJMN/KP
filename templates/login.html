@@ -2,146 +2,146 @@
 <html lang="id">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - ATMi</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='dist/css/adminlte.css') }}">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - ATMi</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+  <style>
+    body {
+      background: linear-gradient(135deg, #005c97, #363795);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: "Segoe UI", sans-serif;
+      animation: fadeInBody 1s ease;
+    }
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    @keyframes fadeInBody {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
 
-        body {
-            font-family: Arial, sans-serif;
-            background-image: url("{{ url_for('static', filename='dist/assets/img/background.jpg') }}");
-            background-size: cover;
-            background-position: center;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
 
-        .container {
-            background-color: rgba(255, 255, 255, 0.95);
-            border-radius: 16px;
-            padding: 40px;
-            max-width: 400px;
-            width: 90%;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-        }
+    .login-container {
+      background: white;
+      padding: 2.5rem;
+      border-radius: 15px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+      animation: zoomIn 0.8s ease;
+    }
 
-        .container h2 {
-            text-align: center;
-            margin-bottom: 30px;
-        }
+    @keyframes zoomIn {
+      from {
+        transform: scale(0.8);
+        opacity: 0;
+      }
 
-        .form-group {
-            margin-bottom: 20px;
-        }
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
 
-        .form-group input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 16px;
-        }
+    .login-container h2 {
+      text-align: center;
+      margin-bottom: 2rem;
+      color: #005c97;
+    }
 
-        .forgot-password {
-            display: block;
-            text-align: right;
-            font-size: 14px;
-            color: #555;
-            text-decoration: none;
-        }
+    .form-control:focus {
+      border-color: #005c97;
+      box-shadow: 0 0 0 0.2rem rgba(0, 92, 151, 0.25);
+    }
 
-        .login-button {
-            background-color: #0d5c95;
-            color: #fff;
-            padding: 12px;
-            border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            cursor: pointer;
-            width: 100%;
-        }
+    .btn-login {
+      background-color: #005c97;
+      color: white;
+      font-weight: bold;
+    }
 
-        .logo {
-            text-align: center;
-            margin-bottom: 30px;
-        }
+    .btn-login:hover {
+      background-color: #003e6b;
+    }
 
-        .logo img {
-            max-width: 150px;
-        }
+    .logo {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
 
-        .social-icons {
-            margin-top: 20px;
-            text-align: center;
-        }
+    .logo img {
+      width: 120px;
+      animation: rotateIn 1.2s ease;
+    }
 
-        .social-icons i {
-            margin: 0 10px;
-            color: #0d5c95;
-            font-size: 20px;
-            cursor: pointer;
-        }
-    </style>
+    @keyframes rotateIn {
+      from {
+        transform: rotate(-180deg);
+        opacity: 0;
+      }
 
+      to {
+        transform: rotate(0deg);
+        opacity: 1;
+      }
+    }
+
+    .form-floating label {
+      color: #999;
+    }
+  </style>
 </head>
 
 <body>
-    <div class="container">
-        <div class="logo">
-            <img src="{{ url_for('static', filename='dist/assets/img/atmi-logo-small.png') }}" alt="Logo ATMi">
-        </div>
-        <h2>Login</h2>
-        <form action="{{ url_for('klaim.login')}}" method="POST">
-            <div class="form-group">
-                <input type="text" class="form-control" id="username" name="username" placeholder="Username"
-                    autocomplete="off" required>
-            </div>
-            <div class="form-group">
-                <input type="password" class="form-control" id="password" name="password" placeholder="Password"
-                    autocomplete="off" required>
-            </div>
-            <button type="submit" class="login-button mb-3">LOGIN</button>
-            <div>
-                <a href="#" class="forgot-password">Forgot Your Password ?</a>
-            </div>
-        </form>
+  <div class="login-container">
+    <div class="logo">
+      <img src="{{ url_for('static', filename='dist/assets/img/atmi-logo-small.png') }}" alt="Logo ATMi">
     </div>
-    
+    <h2>Welcome Back</h2>
+    <form action="{{ url_for('klaim.login') }}" method="POST">
+      <div class="form-floating mb-3">
+        <input type="text" name="username" class="form-control" id="username" placeholder="Username" required />
+        <label for="username"><i class="fas fa-user"></i> Username</label>
+      </div>
+      <div class="form-floating mb-4">
+        <input type="password" name="password" class="form-control" id="password" placeholder="Password" required />
+        <label for="password"><i class="fas fa-lock"></i> Password</label>
+      </div>
+      <button type="submit" class="btn btn-login w-100 py-2 mb-2">Login</button>
+      <!--<div class="text-center">
+        <a href="#" class="text-muted small">Lupa password?</a>
+      </div>-->
+    </form>
+  </div>
+
+  <!-- SweetAlert untuk flash message -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, message in messages %}
+      <script>
+        Swal.fire({
+          icon: "{{ 'error' if category == 'danger' else category }}",
+          title: "{{ 'Gagal' if category == 'danger' else 'Berhasil' }}",
+          text: "{{ message }}",
+          timer: 2000,
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timerProgressBar: true
+        });
+      </script>
+    {% endfor %}
+  {% endwith %}
 </body>
-{% with messages = get_flashed_messages(with_categories=true) %}
-  {% for category, message in messages %}
-    <script>
-      Swal.fire({
-        icon: "{{ 'error' if category == 'danger' else category }}",
-        text: "{{ message }}",
-        timer: 2000,
-        showConfirmButton: false,
-        toast: true,
-        position: 'top-end',
-        timerProgressBar: true,
-        showClass: {
-          popup: 'swal2-show swal2-animate-fade-in'
-        },
-        hideClass: {
-          popup: 'swal2-hide swal2-animate-fade-out'
-        },
-        customClass: {
-          popup: 'small-alert'
-        }
-      });
-    </script>
-  {% endfor %}
-{% endwith %}
+
 </html>

@@ -1,58 +1,47 @@
 {% include 'header.html' %}
 
-<!--begin::App Main-->
-<main class="app-main" style="display: flex;">
-    <div class="app-content-header">
-        <!--begin::Container-->
-        <div class="container-fluid">
-            <!--begin::Row Header-->
-            <div class="row">
-                <div class="col-sm-6">
-                    <h3 class="mb-0">USER LIST</h3>
-                </div>
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-end">
-                        <li class="breadcrumb-item"><a href="/userlist">User</a></li>
-                    </ol>
-                </div>
-            </div>
-            <!--end::Row Header-->
-            <!-- Begin Content -->
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="card mb-0">
-                        <div class="card-header">
-                            <!-- /.card-header -->
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-striped">
-                                    <thead class="text-center">
-                                        <tr>
-                                            <th>User ID</th>
-                                            <th>Username</th>
-                                            <th>Password</th>
-                                            <th>Role</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for rs in data%}
-                                        <tr class="align-middle text-center">
-                                            <td>{{ rs.0 }}</td>
-                                            <td>{{ rs.1 }}</td>
-                                            <td>{{ rs.2 }}</td>
-                                            <td><span class="badge {{ status_class(rs.3) }}">{{ rs.3 }}</span></td>
-                                        </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- End Content -->
-            </div>
-            <!--end::Container-->
-        </div>
+<main class="app-main py-4">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h3 class="mb-0">Daftar Pengguna</h3>
+      <a href="/adduser" class="btn btn-primary btn-sm">
+        <i class="bi bi-plus-lg"></i> Tambah User
+      </a>
+    </div>
+
+    <div class="card shadow-sm">
+      <div class="card-body table-responsive">
+        <table class="table table-bordered table-striped align-middle text-center">
+          <thead class="table-light">
+            <tr>
+              <th>User ID</th>
+              <th>Username</th>
+              <th>Password</th>
+              <th>Role</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for rs in data %}
+              <tr>
+                <td>{{ rs[0] }}</td>
+                <td>{{ rs[1] }}</td>
+                <td>
+                  <input type="password" class="form-control text-center" value="{{ rs[2] }}" readonly style="border: none; background: transparent;">
+                </td>
+                <td>
+                  <span class="badge {{ status_class(rs[3]) | default('bg-secondary') }}">{{ rs[3] }}</span>
+                </td>
+              </tr>
+            {% else %}
+              <tr>
+                <td colspan="4" class="text-center text-muted">Tidak ada data pengguna.</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </main>
-<!--end::App Main-->
 
 {% include 'footer.html' %}

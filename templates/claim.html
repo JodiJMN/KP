@@ -1,108 +1,279 @@
 {% include 'header.html' %}
 
-<!--begin::App Main-->
-<main class="app-main" style="display: flex;">
-  <div class="app-content-header">
-    <!--begin::Container-->
-    <div class="container-fluid">
-      <!--begin::Row Header-->
-      <div class="row">
-        <div class="col-sm-6">
-          <h3 class="mb-0">Claim Handling</h3>
-        </div>
-        <div class="col-sm-6">
-          <ol class="breadcrumb float-sm-end">
-            <li class="breadcrumb-item">
-              <a href="/formclaim" class="btn btn-sm btn-primary">Add Claim</a>
-            </li>
-            <li class="breadcrumb-item active" aria-current="page">Claim</li>
-          </ol>
-        </div>
+<main class="app-main py-4">
+  <div class="container-fluid"> {# Gunakan container-fluid untuk lebar penuh #}
+    <div class="row">
+      <div class="col-sm-6">
+        <h3 class="mb-0">Claim Handling List</h3> {# Ubah judul agar lebih jelas #}
       </div>
-      <!--end::Row Header-->
-      <!-- Begin Content -->
-      <div class="row">
-        <div class="col-md-12">
-          <div class="card mb-0">
-            <div class="card-header">
-              <!-- /.card-header -->
-              <div class="table-responsive">
-                <table class="table table-bordered table-striped">
-                  <thead class="text-center">
-                    <tr>
-                      <th>Claim ID</th>
-                      <th>Claim Status</th>
-                      <th>Claim Number</th>
-                      <th>Claim Inisiator</th>
-                      <th>Claim Type</th>
-                      <th>Terminal</th>
-                      <th>No. Acq</th>
-                      <th>No. PAN</th>
-                      <th>No. Resi</th>
-                      <th>Transaction Date</th>
-                      <th>Transcation Time</th>
-                      <th>Due Date</th>
-                      <th>Claim Date</th>
-                      <th>Transcation Amount</th>
-                      <th>Description</th>
-                      <th>User</th>
-                      <th>Reference</th>
-                      <th>Week Report</th>
-                      <th>Close Claim</th>
-                      <th>BIN</th>
-                      <th>Routing</th>
-                      <th>Claim Entry BOA</th>
-                      <th>Remarks</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {% for rs in data%}
-                    <tr class="align-middle">
-                      <td>{{ rs.0 }}</td>
-                      <td><span class="badge {{ status_class(rs.1) }}">{{ rs.1 }}</span></td>
-                      <td>{{ rs.2 }}</td>
-                      <td>{{ rs.3 }}</td>
-                      <td>{{ rs.4 }}</td>
-                      <td>{{ rs.5 }}</td>
-                      <td>{{ rs.6 }}</td>
-                      <td>{{ rs.7 }}</td>
-                      <td>{{ rs.8 }}</td>
-                      <td>{{ rs.9 }}</td>
-                      <td>{{ rs.10 }}</td>
-                      <td>{{ rs.11}}</td>
-                      <td>{{ rs.12 }}</td>
-                      <td>{{ rs.13 }}</td>
-                      <td>{{ rs.14 }}</td>
-                      <td>{{ rs.15 }}</td>
-                      <td>{{ rs.16 }}</td>
-                      <td>{{ rs.17 }}</td>
-                      <td>{{ rs.18 }}</td>
-                      <td>{{ rs.19 }}</td>
-                      <td>{{ rs.20 }}</td>
-                      <td>{{ rs.21 }}</td>
-                      <td>{{ rs.22 }}</td>
-                      <td>
-                        <a href="{{ url_for('klaim.update', claim_id=rs.0) }}" class="btn btn-sm btn-warning mb-2">Update</a>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-end">
+          <li class="breadcrumb-item">
+            <a href="/formclaim" class="btn btn-sm btn-primary">Add Claim</a>
+          </li>
+          <li class="breadcrumb-item active" aria-current="page">Claim</li>
+        </ol>
+      </div>
+    </div>
 
-                        {% if session['role'] == 'admin' %}
-                        <a href="{{ url_for('klaim.delete_claim', claim_id=rs.0) }}" class="btn btn-sm btn-danger"
-                          onclick="return confirm('Are you sure you want to delete this claim?')">Delete</a>
-                        {% endif %}
-                      </td>
-                    </tr>
-                    {% endfor %}
-                  </tbody>
-                </table>
+    <div class="row mt-3"> {# Tambahkan sedikit margin atas #}
+      <div class="col-md-12">
+        <div class="card shadow-sm"> {# Gunakan shadow-sm untuk efek bayangan #}
+          <div class="card-header bg-light"> {# Ubah warna header card #}
+            <form method="GET" class="row g-2">
+              <div class="col-md-4">
+                <label for="statusFilter" class="visually-hidden">Filter Status</label> {# Aksesibilitas #}
+                <select name="status" id="statusFilter" class="form-select form-select-sm"> {# Perbarui kelas #}
+                  <option value="">-- All Status --</option>
+                  {% for status in all_status %}
+                    <option value="{{ status }}" {% if status == selected_status %}selected{% endif %}>{{ status }}</option>
+                  {% endfor %}
+                </select>
               </div>
-            </div>
+              <div class="col-md-2">
+                <button type="submit" class="btn btn-primary btn-sm w-100">Filter</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="card-body p-0"> {# Hapus padding agar tabel mengisi penuh #}
+            <div class="table-responsive">
+              <table class="table table-hover table-striped text-center align-middle mb-0"> {# Hapus border, tambah hover #}
+                <thead class="table-primary">
+                  <tr>
+                    <th style="width: 5%;">Claim ID</th> {# Atur lebar jika perlu #}
+                    <th style="width: 15%;">Claim Status</th>
+                    <th style="width: 10%;">Claim Number</th>
+                    <th style="width: 15%;">Claim Inisiator</th>
+                    <th style="width: 10%;">Claim Type</th>
+                    <th style="width: 10%;">Terminal</th>
+                    <th style="width: 10%;">Amount</th>
+                    <th style="width: 15%;">Due Date</th>
+                    <th style="width: 10%;">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for rs in data %}
+                  <tr class="align-middle">
+                    <td>{{ rs.claim_id }}</td>
+                    <td><span class="badge {{ status_class(rs.claim_status) }}">{{ rs.claim_status }}</span></td>
+                    <td>{{ rs.claim_number | default('N/A') }}</td> {# Tambahkan default #}
+                    <td>{{ rs.claim_inisiator | default('N/A') }}</td>
+                    <td>{{ rs.claim_type | default('N/A') }}</td>
+                    <td>{{ rs.terminal | default('N/A') }}</td>
+                    <td>{{ format_rupiah(rs.trx_amount) | default('0') }}</td> {# Format Rupiah #}
+                    <td>{{ rs.due_date | default('N/A') }}</td>
+                    <td>
+                      {# Tombol Detail Modal #}
+                      <button type="button" class="btn btn-sm btn-info mb-1" data-bs-toggle="modal" data-bs-target="#claimDetailModal" data-claim='{{ rs | tojson }}'>
+                        Detail
+                      </button>
+
+                      {# Tombol Update #}
+                      <a href="{{ url_for('klaim.update', claim_id=rs.claim_id) }}" class="btn btn-sm btn-warning mb-1">Update</a>
+
+                      {# Tombol Delete (hanya untuk admin) #}
+                      {% if session['role'] == 'admin' %}
+                      <form action="{{ url_for('klaim.delete_claim', claim_id=rs.claim_id) }}" method="POST" style="display:inline-block;">
+                        <button type="submit" class="btn btn-sm btn-danger"
+                          onclick="return confirm('Are you sure you want to delete this claim?')">
+                          Delete
+                        </button>
+                      </form>
+                      {% endif %}
+                    </td>
+                  </tr>
+                  {% else %}
+                  <tr>
+                    <td colspan="9" class="text-center text-muted py-4">Tidak ada data klaim yang ditemukan.</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div> {# End table-responsive #}
+          </div> {# End card-body #}
+
+          {# Pagination #}
+          <div class="card-footer clearfix">
+            <nav aria-label="Page navigation">
+              <ul class="pagination pagination-sm justify-content-center m-0">
+                {% if page > 1 %}
+                <li class="page-item">
+                  <a class="page-link" href="{{ url_for('klaim.claim', status=selected_status, page=page-1) }}">Previous</a>
+                </li>
+                {% endif %}
+
+                {% for p in range(1, (total_claims // per_page) + 2) %}
+                  <li class="page-item {% if p == page %}active{% endif %}">
+                    <a class="page-link" href="{{ url_for('klaim.claim', status=selected_status, page=p) }}">{{ p }}</a>
+                  </li>
+                {% endfor %}
+
+                {% if page * per_page < total_claims %}
+                <li class="page-item">
+                  <a class="page-link" href="{{ url_for('klaim.claim', status=selected_status, page=page+1) }}">Next</a>
+                </li>
+                {% endif %}
+              </ul>
+            </nav>
+          </div> {# End card-footer #}
+
+        </div> {# End card #}
+      </div> {# End col-md-12 #}
+    </div> {# End row content #}
+  </div> {# End container-fluid #}
+</main>
+<div class="modal fade" id="claimDetailModal" tabindex="-1" aria-labelledby="claimDetailModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable"> {# Tambahkan scrollable jika detail terlalu panjang #}
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="claimDetailModalLabel">Detail Klaim: <span id="modalClaimNumber"></span></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          {# Kolom Kiri Detail #}
+          <div class="col-md-6">
+            <p><strong>Claim ID:</strong> <span id="detailClaimId"></span></p>
+            <p><strong>Claim Status:</strong> <span id="detailClaimStatus"></span></p>
+            <p><strong>Claim Number:</strong> <span id="detailClaimNumberFull"></span></p> {# Detail penuh #}
+            <p><strong>Claim Inisiator:</strong> <span id="detailClaimInisiator"></span></p>
+            <p><strong>Claim Type:</strong> <span id="detailClaimType"></span></p>
+            <p><strong>Terminal ID:</strong> <span id="detailTerminal"></span></p>
+            <p><strong>No. Acquirer:</strong> <span id="detailNoAcq"></span></p>
+            <p><strong>No. PAN:</strong> <span id="detailNoPan"></span></p> {# Tampilkan PAN lengkap di detail #}
+            <p><strong>No. Resi:</strong> <span id="detailNoReceipt"></span></p>
+            <p><strong>Transaction Date:</strong> <span id="detailTrxDate"></span></p>
+            <p><strong>Transaction Time:</strong> <span id="detailTrxTime"></span></p>
+          </div>
+          {# Kolom Kanan Detail #}
+          <div class="col-md-6">
+            <p><strong>Due Date:</strong> <span id="detailDueDate"></span></p>
+            <p><strong>Claim Date:</strong> <span id="detailClaimDate"></span></p>
+            <p><strong>Transaction Amount:</strong> <span id="detailTrxAmount"></span></p>
+            <p><strong>Description:</strong> <span id="detailDescription"></span></p>
+            <p><strong>User ID (Pencatat):</strong> <span id="detailUserId"></span></p> {# Tambah user_id #}
+            <p><strong>User Name (Pencatat):</strong> <span id="detailUser"></span></p> {# user name #}
+            <p><strong>Reference:</strong> <span id="detailReference"></span></p>
+            <p><strong>Week Report:</strong> <span id="detailWeekReport"></span></p>
+            <p><strong>Close Claim:</strong> <span id="detailCloseClaim"></span></p>
+            <p><strong>BIN:</strong> <span id="detailBin"></span></p>
+            <p><strong>Error Code:</strong> <span id="detailErrorCode"></span></p>
+            <p><strong>Routing:</strong> <span id="detailRouting"></span></p>
+            <p><strong>Claim Entry BOA:</strong> <span id="detailClaimEntryBoa"></span></p>
+            <p><strong>Remarks:</strong> <span id="detailRemarks"></span></p>
+            <p><strong>Approved By:</strong> <span id="detailApprovedBy"></span></p>
+            <p><strong>Approved At:</strong> <span id="detailApprovedAt"></span></p>
           </div>
         </div>
-        <!-- End Content -->
       </div>
-      <!--end::Container-->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
     </div>
-</main>
-<!--end::App Main-->
+  </div>
+</div>
+
+{# Script untuk mengisi data modal #}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var claimDetailModal = document.getElementById('claimDetailModal');
+    claimDetailModal.addEventListener('show.bs.modal', function (event) {
+      var button = event.relatedTarget;
+      var claimData = JSON.parse(button.getAttribute('data-claim'));
+
+      // Panggil fungsi mask_pan yang sama di JS jika ingin PAN tetap ter-mask di modal
+      // Atau tampilkan PAN asli jika di modal ingin lengkap
+      // Untuk menampilkan PAN asli di modal:
+      // var maskedPan = claimData.no_pan; // Tanpa mask
+      
+      // Untuk menampilkan PAN yang di-mask di modal (jika format_rupiah_js menerima parameter mask_pan):
+      var maskedPan = maskPanJs(claimData.no_pan); // Perlu fungsi maskPanJs
+
+      // Referensi elemen di modal
+      document.getElementById('modalClaimNumber').textContent = claimData.claim_number || 'N/A';
+      document.getElementById('detailClaimId').textContent = claimData.claim_id || 'N/A';
+      
+      // Pastikan badge status juga diperbarui di modal
+      var detailClaimStatusElement = document.getElementById('detailClaimStatus');
+      detailClaimStatusElement.textContent = claimData.claim_status || 'N/A';
+      detailClaimStatusElement.className = 'badge ' + getStatusClass(claimData.claim_status); // Update badge class
+      
+      document.getElementById('detailClaimNumberFull').textContent = claimData.claim_number || 'N/A';
+      document.getElementById('detailClaimInisiator').textContent = claimData.claim_inisiator || 'N/A';
+      document.getElementById('detailClaimType').textContent = claimData.claim_type || 'N/A';
+      document.getElementById('detailTerminal').textContent = claimData.terminal || 'N/A';
+      document.getElementById('detailNoAcq').textContent = claimData.no_acq || 'N/A';
+      document.getElementById('detailNoPan').textContent = maskedPan; // Tampilkan PAN di-mask atau asli
+      document.getElementById('detailNoReceipt').textContent = claimData.no_receipt || 'N/A';
+      document.getElementById('detailTrxDate').textContent = claimData.trx_date || 'N/A';
+      document.getElementById('detailTrxTime').textContent = claimData.trx_time || 'N/A';
+      document.getElementById('detailDueDate').textContent = claimData.due_date || 'N/A';
+      document.getElementById('detailClaimDate').textContent = claimData.claim_date || 'N/A';
+      document.getElementById('detailTrxAmount').textContent = formatRupiahJs(claimData.trx_amount);
+      document.getElementById('detailDescription').textContent = claimData.description || 'N/A';
+      document.getElementById('detailUserId').textContent = claimData.user_id || 'N/A'; // Tambah
+      document.getElementById('detailUser').textContent = claimData.user || 'N/A'; // Tambah
+      document.getElementById('detailReference').textContent = claimData.reference || 'N/A';
+      document.getElementById('detailWeekReport').textContent = claimData.week_report || 'N/A';
+      document.getElementById('detailCloseClaim').textContent = claimData.close_claim || 'N/A';
+      document.getElementById('detailBin').textContent = claimData.bin || 'N/A';
+      document.getElementById('detailErrorCode').textContent = claimData.error_code || 'N/A';
+      document.getElementById('detailRouting').textContent = claimData.routing || 'N/A';
+      document.getElementById('detailClaimEntryBoa').textContent = claimData.claim_entry_boa || 'N/A';
+      document.getElementById('detailRemarks').textContent = claimData.remarks || 'N/A';
+      document.getElementById('detailApprovedBy').textContent = claimData.approved_by || 'N/A';
+      document.getElementById('detailApprovedAt').textContent = claimData.approved_at || 'N/A';
+    });
+
+    // Fungsi JS untuk format rupiah
+    function formatRupiahJs(amount) {
+        if (amount === null || amount === undefined || isNaN(amount)) return 'Rp 0'; // Handle null/undefined/NaN
+        var reverse = amount.toString().split('').reverse().join(''),
+        ribuan = reverse.match(/\d{1,3}/g);
+        ribuan = ribuan.join('.').split('').reverse().join('');
+        return 'Rp ' + ribuan;
+    }
+
+    // Fungsi JS untuk mask PAN (harus sesuai dengan mask_pan di Python)
+    function maskPanJs(pan) {
+        pan = String(pan);
+        if (pan.length >= 10) {
+            return pan.substring(0, 6) + '*'.repeat(pan.length - 10) + pan.substring(pan.length - 4);
+        }
+        return pan;
+    }
+
+    // Fungsi JS untuk mendapatkan class status (sesuai status_class di Python)
+    function getStatusClass(status) {
+        const statusMap = {
+            "Solved": "bg-primary",
+            "Reject": "bg-danger",
+            "Rejected by Acq": "bg-danger",
+            "Closed by Acquirer": "bg-secondary",
+            "Closed Success": "bg-success",
+            "Already Web Claim": "bg-info",
+            "Already Email Claim": "bg-info",
+            "Already Pro-Active": "bg-info",
+            "Cancelled by Acq": "bg-dark",
+            "Cancelled by ALTO": "bg-dark",
+            "On Process": "bg-warning",
+            "Not Yet Inputted": "bg-warning",
+            "Process on Next Day": "bg-warning",
+            "Change to be Re-Active": "bg-warning",
+            "Pending Investigation": "bg-primary",
+            "Waiting Approval": "bg-primary",
+            "Waiting Reject": "bg-primary",
+            "Duplicate/Double": "bg-light text-dark",
+            "Crosscheck": "bg-warning",
+            "Close by System": "bg-secondary",
+            "Active": "bg-success",
+            "admin": "bg-danger",
+            "user": "bg-primary",
+        };
+        return statusMap[status] || "bg-light text-dark";
+    }
+  });
+</script>
 
 {% include 'footer.html' %}

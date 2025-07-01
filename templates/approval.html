@@ -1,0 +1,51 @@
+{% include 'header.html' %}
+
+<main class="app-main py-4">
+  <div class="container">
+    <h3 class="mb-3">Daftar Klaim Menunggu Persetujuan</h3>
+
+    <div class="card shadow-sm">
+      <div class="card-body table-responsive">
+        <table class="table table-bordered table-striped text-center align-middle">
+          <thead class="table-primary">
+            <tr>
+              <th>ID</th>
+              <th>Inisiator</th>
+              <th>Tipe</th>
+              <th>Status</th>
+              <th>Tanggal Klaim</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for claim in data %}
+              <tr>
+                <td>{{ claim.claim_id }}</td>
+                <td>{{ claim.claim_inisiator }}</td>
+                <td>{{ claim.claim_type }}</td>
+                <td><span class="badge bg-warning">{{ claim.claim_status }}</span></td>
+                <td>{{ claim.claim_date }}</td>
+                <td>
+                  <form method="POST" action="{{ url_for('klaim.approve_claim', claim_id=claim.claim_id) }}" style="display:inline-block;">
+                    <button class="btn btn-success btn-sm" onclick="return confirm('Approve klaim ini?')">
+                      Approve
+                    </button>
+                  </form>
+                  <form method="POST" action="{{ url_for('klaim.reject_claim', claim_id=claim.claim_id) }}" style="display:inline-block;">
+                    <button class="btn btn-danger btn-sm" onclick="return confirm('Reject klaim ini?')">
+                      Reject
+                    </button>
+                  </form>
+                </td>
+              </tr>
+            {% else %}
+              <tr><td colspan="6" class="text-muted">Tidak ada klaim menunggu persetujuan.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>
+
+{% include 'footer.html' %}

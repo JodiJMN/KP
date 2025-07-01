@@ -1,166 +1,224 @@
 {% include 'header.html' %}
 
-<!--begin::App Main-->
-<main class="app-main" style="display: flex;">
-    <div class="app-content-header">
-        <!--begin::Container-->
-        <div class="container-fluid">
-            <!--begin::Row Header-->
-            <div class="row">
-                <div class="col-sm-6">
-                    <h3 class="mb-0">Edit Claim</h3>
-                </div>
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-end">
-                        <li class="breadcrumb-item"><a href="/klaim.update">Edit Claim</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Claim</li>
-                    </ol>
-                </div>
+<main class="app-main py-4">
+  <div class="container">
+    <h3 class="mb-4">Edit Claim</h3>
+
+    <form action="{{ url_for('klaim.update', claim_id=claim.claim_id) }}" method="POST">
+      <div class="row">
+
+        <!-- Kolom Kiri -->
+        <div class="col-md-6">
+          <div class="card card-body shadow-sm">
+            <div class="mb-2">
+              <label>Claim ID</label>
+              <input type="text" class="form-control" value="{{ claim.claim_id }}" readonly>
             </div>
 
-            {% set claim_status_options = ["Solved", "Reject", "Closed by Acquirer", "Already Web Claim", "Closed Success", "Active", "Close by System", "Already Email Claim", "Already Pro-Active", "Cancelled by Acq", "On Process", "Not Yet Inputed", "Process on Next Day", "Change to be Re-Active", "Rejected by Acq", "Pending Investigation", "Waiting Approve", "Waiting Reject", "Cancelled by ALTO", "Duplicate/Double", "Crosscheck"] %}
-            {% set claim_type_options = ["Web Claim", "Web Claim AJ", "Pro Active Claim"] %}
-            {% set routing_options = ["ALTO", "ARTAJASA"] %}
-            {% set claim_entry_boa_options = ["Solved", "Rejected", "On Process"] %}
+            <div class="mb-2">
+              <label>Claim Status</label>
+              <select name="claim_status" class="form-control" 
+                {% if 
+                  claim.claim_status in ["Not Yet Inputted", "On Process", "Waiting Reject", "Waiting Approval"]
+                  and session['role'] != 'admin' %}
+                  disabled
+                {% endif %}
+                required>
+                <option value="" disabled>-- Select Claim Status --</option>
+                {% for status in status_options %}
+                <option value="{{ status }}" {% if claim.claim_status == status %}selected{% endif %}>{{ status }}</option>
+                {% endfor %}
+              </select>
+              {% if claim.claim_status in ["Not Yet Inputted", "On Process", "Waiting Reject", "Waiting Approval"]
+                and session['role'] != 'admin' %}
+                <small class="text-danger">Status tidak dapat diubah sebelum disetujui admin.</small>
+              {% endif %}
+            </div>
 
-            <form action="{{ url_for('klaim.update', claim_id=claim.claim_id) }}" method="POST">
+            <div class="mb-2">
+              <label>Claim Number</label>
+              <input type="text" name="claim_number" value="{{ claim.claim_number }}" class="form-control">
+            </div>
 
-                <div class="row">
+            <div class="mb-2">
+              <label>Claim Inisiator</label>
+              <input type="text" name="claim_inisiator" value="{{ claim.claim_inisiator }}" class="form-control" readonly>
+            </div>
 
-                    <!-- Kolom Kiri -->
-                    <div class="col-md-6">
-                        <div class="card card-primary card-outline mb-4">
-                            <div class="card-body">
-                                <div class="mb-2">
-                                    <label for="claim_id" class="mb-0 form-label">Claim ID</label>
-                                    <input type="text" class="form-control" id="claim_id" name="claim_id" value="{{ claim.claim_id }}" readonly />
-                                </div>
-                                <div class="mb-2">
-                                    <label for="claim_status" class="mb-0 form-label">Claim Status</label>
-                                    <select class="form-control" id="claim_status" name="claim_status" required>
-                                        {% for status in claim_status_options %}
-                                            <option value="{{ status }}" {% if claim.claim_status == status %}selected{% endif %}>{{ status }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                                <div class="mb-2">
-                                    <label for="claim_number" class="form-label">Claim Number</label>
-                                    <input type="text" class="form-control" id="claim_number" name="claim_number" value="{{ claim.claim_number }}" required />
-                                </div>
-                                <div class="mb-2">
-                                    <label for="claim_inisiator" class="form-label">Claim Inisiator</label>
-                                    <input type="text" class="form-control" id="claim_inisiator" name="claim_inisiator" value="{{ claim.claim_inisiator }}" required />
-                                </div>
-                                <div class="mb-2">
-                                    <label for="claim_type" class="mb-0 form-label">Claim Type</label>
-                                    <select class="form-control" id="claim_type" name="claim_type" required>
-                                        {% for type in claim_type_options %}
-                                            <option value="{{ type }}" {% if claim.claim_type == type %}selected{% endif %}>{{ type }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                                <div class="mb-2">
-                                    <label for="terminal" class="form-label">Terminal</label>
-                                    <input type="text" class="form-control" id="terminal" name="terminal" value="{{ claim.terminal }}" required />
-                                </div>
-                                <div class="mb-2">
-                                    <label for="no_acq" class="form-label">No. Acquirer</label>
-                                    <input type="text" class="form-control" id="no_acq" name="no_acq" value="{{ claim.no_acq }}" required />
-                                </div>
-                                <div class="mb-2">
-                                    <label for="no_pan" class="form-label">No. PAN</label>
-                                    <input type="text" class="form-control" id="no_pan" name="no_pan" value="{{ claim.no_pan }}" required />
-                                </div>
-                                <div class="mb-2">
-                                    <label for="no_receipt" class="form-label">No. Receipt</label>
-                                    <input type="text" class="form-control" id="no_receipt" name="no_receipt" value="{{ claim.no_receipt }}" required />
-                                </div>
-                                <div class="mb-2">
-                                    <label for="trx_date" class="form-label">Transaction Date</label>
-                                    <input type="date" class="form-control" id="trx_date" name="trx_date" value="{{ claim.trx_date }}" required />
-                                </div>
-                                <div class="mb-2">
-                                    <label for="trx_time" class="form-label">Transaction Time</label>
-                                    <input type="time" class="form-control" id="trx_time" name="trx_time" value="{{ claim.trx_time }}" required />
-                                </div>
-                                <div class="mb-2">
-                                    <label for="due_date" class="form-label">Due Date</label>
-                                    <input type="date" class="form-control" id="due_date" name="due_date" value="{{ claim.due_date }}" required />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            <div class="mb-2">
+              <label>Claim Type</label>
+              <select name="claim_type" class="form-control" required>
+                <option value="">-- Select Claim Type --</option>
+                {% for tipe in type_klaim_options %}
+                <option value="{{ tipe }}" {% if claim.claim_type == tipe %}selected{% endif %}>{{ tipe }}</option>
+                {% endfor %}
+              </select>
+            </div>
 
-                    <!-- Kolom Kanan -->
-                    <div class="col-md-6">
-                        <div class="card card-primary card-outline mb-4">
-                            <div class="card-body">
-                                <div class="mb-2">
-                                    <label for="claim_date" class="form-label">Claim Date</label>
-                                    <input type="date" class="form-control" id="claim_date" name="claim_date" value="{{ claim.claim_date }}" required />
-                                </div>
-                                <div class="mb-2">
-                                    <label for="trx_amount" class="form-label">Transaction Amount</label>
-                                    <input type="text" class="form-control" id="trx_amount" name="trx_amount" value="{{ claim.trx_amount }}" required />
-                                </div>
-                                <div class="mb-2">
-                                    <label for="description" class="form-label">Description</label>
-                                    <input type="text" class="form-control" id="description" name="description" value="{{ claim.description }}" required />
-                                </div>
-                                <div class="mb-2">
-                                    <label for="user" class="form-label">User</label>
-                                    <input type="text" class="form-control" id="user" name="user" value="{{ claim.user }}" readonly />
-                                </div>
-                                <div class="mb-2">
-                                    <label for="reference" class="form-label">Reference</label>
-                                    <input type="text" class="form-control" id="reference" name="reference" value="{{ claim.reference }}" required />
-                                </div>
-                                <div class="mb-2">
-                                    <label for="week_report" class="form-label">Week Report</label>
-                                    <input type="text" class="form-control" id="week_report" name="week_report" value="{{ claim.week_report }}" required />
-                                </div>
-                                <div class="mb-2">
-                                    <label for="close_claim" class="form-label">Close Claim Date</label>
-                                    <input type="date" class="form-control" id="close_claim" name="close_claim" value="{{ claim.close_claim }}" required />
-                                </div>
-                                <div class="mb-2">
-                                    <label for="bin" class="form-label">BIN</label>
-                                    <input type="text" class="form-control" id="bin" name="bin" value="{{ claim.bin }}" required />
-                                </div>
-                                <div class="mb-2">
-                                    <label for="routing" class="form-label">Routing</label>
-                                    <select class="form-control" id="routing" name="routing" required>
-                                        {% for route in routing_options %}
-                                            <option value="{{ route }}" {% if claim.routing == route %}selected{% endif %}>{{ route }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                                <div class="mb-2">
-                                    <label for="claim_entry_boa" class="form-label">Claim Entry BOA</label>
-                                    <select class="form-control" id="claim_entry_boa" name="claim_entry_boa" required>
-                                        {% for entry in claim_entry_boa_options %}
-                                            <option value="{{ entry }}" {% if claim.claim_entry_boa == entry %}selected{% endif %}>{{ entry }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="remarks" class="form-label">Remarks</label>
-                                    <input type="text" class="form-control" id="remarks" name="remarks" value="{{ claim.remarks }}" required />
-                                </div>
-                                <div class="row">
-                                    <div class="">
-                                        <button type="submit" class="btn btn-primary">Update</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form>
+            <div class="mb-2">
+              <label>Terminal ID</label>
+              <input type="text" name="terminal" value="{{ claim.terminal }}" class="form-control" required>
+            </div>
 
+            <div class="mb-2">
+              <label>No. Acquirer</label>
+              <input type="text" name="no_acq" value="{{ claim.no_acq }}" class="form-control" required>
+            </div>
+
+            <div class="mb-2">
+              <label>No. PAN</label>
+              <input type="text" name="no_pan" value="{{ claim.no_pan }}" class="form-control" required>
+            </div>
+
+            <div class="mb-2">
+              <label>No. Resi</label>
+              <input type="text" name="no_receipt" value="{{ claim.no_receipt }}" class="form-control">
+            </div>
+
+            <div class="mb-2">
+              <label>Transaction Date</label>
+              <input type="date" name="trx_date" value="{{ claim.trx_date }}" class="form-control" required>
+            </div>
+
+            <div class="mb-2">
+              <label>Transaction Time</label>
+              <input type="text" name="trx_time" value="{{ claim.trx_time }}" class="form-control" step="1" required>
+            </div>
+
+            <div class="mb-2">
+              <label>Due Date</label>
+              <input type="date" name="due_date" value="{{ claim.due_date }}" class="form-control" required>
+            </div>
+
+            <div class="mb-2">
+              <label>Claim Date</label>
+              <input type="date" name="claim_date" value="{{ claim.claim_date }}" class="form-control" required>
+            </div>
+          </div>
         </div>
-    </div>
+
+        <!-- Kolom Kanan -->
+        <div class="col-md-6">
+          <div class="card card-body shadow-sm">
+            <div class="mb-2">
+              <label>Amount</label>
+              <input type="number" name="trx_amount" class="form-control" step="50000" min="0" value="{{ claim.trx_amount }}" required>
+              <small class="text-muted">Jumlah: Rp {{ format_rupiah(claim.trx_amount) }}</small>
+            </div>
+
+            <div class="mb-2">
+              <label>Description</label>
+              <input type="text" name="description" value="{{ claim.description }}" class="form-control">
+            </div>
+
+            <div class="mb-2">
+              <label>User</label>
+              <input type="hidden" name="user_id" value="{{ session['user_id'] }}">
+              <input type="text" name="user" value="{{ session['username'] }}" class="form-control" readonly>
+            </div>
+
+            <div class="mb-2">
+              <label>Reference</label>
+              <input type="text" name="reference" value="{{ claim.reference }}" class="form-control">
+            </div>
+
+            <div class="mb-2">
+              <label>Week Report</label>
+              <input type="text" name="week_report" value="{{ claim.week_report }}" class="form-control">
+            </div>
+
+            <div class="mb-2">
+              <label>Close Claim</label>
+              <input type="date" name="close_claim" value="{{ claim.close_claim }}" class="form-control">
+            </div>
+
+            <div class="mb-2">
+              <label>BIN</label>
+              <input type="text" name="bin" value="{{ claim.bin }}" class="form-control">
+            </div>
+
+            <div class="mb-2">
+              <label>Error Code</label>
+              <select name="error_code" class="form-control">
+                {% for code in error_code_options %}
+                <option value="{{ code }}" {% if claim.error_code == code %}selected{% endif %}>{{ code }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="mb-2">
+              <label>Routing</label>
+              <select name="routing" class="form-control">
+                {% for route in routing_options %}
+                <option value="{{ route }}" {% if claim.routing == route %}selected{% endif %}>{{ route }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="mb-2">
+              <label>Claim Entry BOA</label>
+              <select name="claim_entry_boa" class="form-control">
+                {% for boa in boa_entry_options %}
+                <option value="{{ boa }}" {% if claim.claim_entry_boa == boa %}selected{% endif %}>{{ boa }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="mb-2">
+              <label>Remarks</label>
+              <textarea name="remarks" rows="2" class="form-control">{{ claim.remarks }}</textarea>
+            </div>
+
+            <div class="mb-2">
+              <label>Approved By</label>
+              <input type="text" name="approved_by" value="{{ claim.approved_by }}" class="form-control" readonly>
+            </div>
+
+            <div class="mb-2">
+              <label>Approved At</label>
+              <input type="datetime-local" name="approved_at" value="{{ claim.approved_at }}" class="form-control" readonly>
+            </div>
+
+            <div class="text-end">
+              <button type="submit" class="btn btn-primary"
+              {% if claim.claim_status in ["Not Yet Inputted", "On Process", "Waiting Reject", "Waiting Approval"] 
+                and session['role'] != 'admin' %} disabled
+              {% endif %}>Update</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </form>
+  </div>
 </main>
-<!--end::App Main-->
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        {% for category, message in messages %}
+        Swal.fire({
+          icon: "{{ 'success' if category == 'success' else 'error' }}",
+          title: "{{ category.capitalize() }}",
+          text: "{{ message }}",
+          timer: 2000,
+          showConfirmButton: false
+        });
+        {% endfor %}
+      });
+
+      // Contoh dengan Flatpickr (Anda harus menginstal librarynya)
+      flatpickr("#trx_time_input", {
+          enableTime: true,
+          noCalendar: true,
+          dateFormat: "H:i:S", // Format 24 jam dengan detik
+          time_24hr: true // Memastikan pemilih waktu juga 24 jam
+      });
+    </script>
+  {% endif %}
+{% endwith %}
+
 
 {% include 'footer.html' %}

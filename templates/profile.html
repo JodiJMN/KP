@@ -1,0 +1,55 @@
+{% include 'header.html' %}
+
+<main class="app-main py-4">
+  <div class="container">
+    <h3 class="mb-4">Profil Pengguna</h3>
+
+    <div class="card shadow-sm mb-4">
+      <div class="card-body">
+        <h5 class="mb-3">Informasi Akun</h5>
+        <p><strong>Username:</strong> {{ session['username'] }}</p>
+        <p><strong>Role:</strong> {{ session['role'].capitalize() }}</p>
+      </div>
+    </div>
+
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h5 class="mb-3">Ganti Password</h5>
+        <form method="POST" action="{{ url_for('klaim.change_password') }}">
+          <div class="mb-3">
+            <label>Password Lama</label>
+            <input type="password" name="old_password" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label>Password Baru</label>
+            <input type="password" name="new_password" class="form-control" required minlength="6">
+          </div>
+          <div class="mb-3">
+            <label>Konfirmasi Password Baru</label>
+            <input type="password" name="confirm_password" class="form-control" required minlength="6">
+          </div>
+          <div class="text-end">
+            <button class="btn btn-primary">Simpan Perubahan</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% for category, message in messages %}
+    <script>
+      Swal.fire({
+        icon: "{{ 'success' if category == 'success' else 'error' }}",
+        title: "{{ category.capitalize() }}",
+        text: "{{ message }}",
+        timer: 2500,
+        showConfirmButton: false
+      });
+    </script>
+  {% endfor %}
+{% endwith %}
+
+{% include 'footer.html' %}

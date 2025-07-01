@@ -1,256 +1,260 @@
-    {% include 'header.html' %}
+{% include 'header.html' %}
 
-    <!--begin::App Main-->
-    <main class="app-main" style="display: flex;">
-        <div class="app-content-header">
-            <!--begin::Container-->
-            <div class="container-fluid">
-                <!--begin::Row Header-->
-                <div class="row">
-                    <div class="col-sm-6">
-                        <h3 class="mb-0">Form Claim</h3>
-                    </div>
-                    <div class="col-sm-6">
-                        <ol class="breadcrumb float-sm-end">
-                            <li class="breadcrumb-item"><a href="/formclaim">Add Claim</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Claim</li>
-                        </ol>
-                    </div>
-                </div>
-                <!--end::Row Header-->
-                <!-- Begin Content -->
-                <div class="row">
-                    <!-- Form Kiri -->
-                    <form action="{{ url_for('klaim.saveformclaim') }}" method="POST">
-                        <div class="row">
+<main class="app-main py-4">
+  <div class="container">
+    <h3 class="mb-4">Form Input Claim</h3>
 
-                            <!-- Kolom Kiri -->
-                            <div class="col-md-6">
-                                <div class="card card-primary card-outline mb-4">
-                                    <div class="card-body">
-                                        <div class="mb-2">
-                                            <label for="claim_id" class="mb-0 form-label">Claim ID (Auto Generate)</label>
-                                            <input type="text" class="form-control" id="claim_id" name="claim_id"
-                                                value="{{ next_claim_id }}" readonly />
-                                        </div>
-                                        <div class="mb-2">
-                                            <label for="claim_status" class="mb-0 form-label">Claim Status</label>
-                                            <select class="form-control" id="claim_status" name="claim_status" required>
-                                                <option value="" disabled selected>-- Select Claim Status --</option>
-                                                <option value="Solved">Solved</option>
-                                                <option value="Reject">Reject</option>
-                                                <option value="Closed by Acquirer">Closed by Acquirer</option>
-                                                <option value="Already Web Claim">Already Web Claim</option>
-                                                <option value="Closed Success">Closed Success</option>
-                                                <option value="Active">Active</option>
-                                                <option value="Close by System">Close by System</option>
-                                                <option value="Already Email Claim">Already Email Claim</option>
-                                                <option value="Already Pro-Active">Already Pro-Active</option>
-                                                <option value="Cancelled by Acq">Cancelled by Acq</option>
-                                                <option value="On Process">On Process</option>
-                                                <option value="Not Yet Inputed">Not Yet Inputed</option>
-                                                <option value="Process on Next Day">Process on Next Day</option>
-                                                <option value="Change to be Re-Active">Change to be Re-Active</option>
-                                                <option value="Rejected by Acq">Rejected by Acq</option>
-                                                <option value="Pending Investigation">Pending Investigation</option>
-                                                <option value="Waiting Approve">Waiting Approve</option>
-                                                <option value="Waiting Reject">Waiting Reject</option>
-                                                <option value="Cancelled by ALTO">Cancelled by ALTO</option>
-                                                <option value="Duplicate/Double">Duplicate/Double</option>
-                                                <option value="Crosscheck">Crosscheck</option>
-                                            </select>
-                                        </div>
-                                        <div class="mb-2">
-                                            <label for="claim_number" class="mb-0 form-label"></label>
-                                            <input type="text" class="form-control" id="claim_number" name="claim_number"
-                                                placeholder="Claim Number Ex: WDL/20250125/33" required />
-                                        </div>
-                                        <div class="mb-2">
-                                            <label for="claim_inisiator" class="form-label"></label>
-                                            <input type="text" class="form-control" id="claim_inisiator"
-                                                name="claim_inisiator"
-                                                placeholder="Claim Number Inisiator Ex: 004205/ATMi-Klaim/25/01/25"
-                                                />
-                                        </div>
-                                        <div class="mb-2">
-                                            <label for="claim_type" class="mb-0 form-label">Claim Type</label>
-                                            <select class="form-control" id="claim_type" name="claim_type" required>
-                                                <option value="" disabled selected>-- Select Claim Type --</option>
-                                                <option value="Web Claim">Web Claim</option>
-                                                <option value="Web Claim AJ">Web Claim AJ</option>
-                                                <option value="Pro Active Claim">Pro Active Claim</option>
-                                            </select>
-                                        </div>
-                                        <div class="mb-2">
-                                            <label for="terminal" class="form-label"></label>
-                                            <input type="text" class="form-control" id="terminal" name="terminal"
-                                                placeholder="Terminal Ex: 1000001" required />
-                                        </div>
-                                        <div class="mb-2">
-                                            <label for="no_acq" class="form-label"></label>
-                                            <input type="text" class="form-control" id="no_acq" name="no_acq"
-                                                placeholder="No. Acquirer Ex: 10010" required />
-                                        </div>
-                                        <div class="mb-2">
-                                            <label for="no_pan" class="form-label"></label>
-                                            <input type="text" class="form-control" id="no_pan" name="no_pan"
-                                                placeholder="No. PAN Ex: 232221929122234" required />
-                                        </div>
-                                        <div class="mb-2">
-                                            <label for="no_receipt" class="form-label"></label>
-                                            <input type="text" class="form-control" id="no_receipt" name="no_receipt"
-                                                placeholder="No. Receipt Ex: 1001" required />
-                                        </div>
-                                        <div class="mb-2">
-                                            <label for="trx_date" class="form-label">Transaction Date</label>
-                                            <input type="date" class="form-control" id="trx_date" name="trx_date"
-                                                placeholder="Transaction Date" required />
-                                        </div>
-                                        <div class="mb-2">
-                                            <label for="trx_time" class="form-label">Transaction Time</label>
-                                            <input type="time" class="form-control" id="trx_time" name="trx_time"
-                                                placeholder="Transaction Time" required />
-                                        </div>
-                                        <div class="mb-2">
-                                            <label for="due_date" class="form-label">Due Date</label>
-                                            <input type="date" class="form-control" id="due_date" name="due_date"
-                                                placeholder="Due Date" readonly/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+    <form action="{{ url_for('klaim.saveformclaim') }}" method="POST">
+      <div class="row">
 
-                            <!-- Form Kanan -->
-                            <div class="col-md-6">
-                                <div class="card card-primary card-outline mb-4">
-                                    <div class="card-body">
-                                        <div class="mb-2">
-                                            <label for="claim_date" class="form-label">Claim Date</label>
-                                            <input type="date" class="form-control" id="claim_date" name="claim_date"
-                                                placeholder="Claim Date" required />
-                                        </div>
-                                        <div class="mb-2">
-                                            <label for="trx_amount" class="form-label"></label>
-                                            <input type="text" class="form-control" id="trx_amount" name="trx_amount"
-                                                placeholder="Transaction Amount" required />
-                                        </div>
-                                        <div class="mb-2">
-                                            <label for="description" class="form-label"></label>
-                                            <input type="text" class="form-control" id="description" name="description"
-                                                placeholder="Description" required />
-                                        </div>
-                                        <div class="mb-2">
-                                            <label for="user" class="form-label"></label>
-                                            <input type="text" class="form-control" id="user" name="user"
-                                                value="{{ current_user }}" readonly>
-                                            <input type="hidden" name="user" value="{{ current_user }}">
-                                        </div>
-                                        <div class="mb-2">
-                                            <label for="reference" class="form-label"></label>
-                                            <input type="text" class="form-control" id="reference" name="reference"
-                                                placeholder="Reference" required />
-                                        </div>
-                                        <div class="mb-2">
-                                            <label for="week_report" class="form-label"></label>
-                                            <input type="text" class="form-control" id="week_report" name="week_report"
-                                                placeholder="Week report Ex: W2-May-25" required />
-                                        </div>
-                                        <div class="mb-2">
-                                            <label for="close_claim" class="form-label">Close Claim Date</label>
-                                            <input type="date" class="form-control" id="close_claim" name="close_claim"
-                                                placeholder="Claim Claim Date" required />
-                                        </div>
-                                        <div class="mb-2">
-                                            <label for="bin" class="form-label"></label>
-                                            <input type="text" class="form-control" id="bin" name="bin"
-                                                placeholder="BIN Ex: 4110" required />
-                                        </div>
-                                        <div class="mb-2">
-                                            <label for="routing" class="form-label">Routing</label>
-                                            <select class="form-control" id="routing" name="routing" required>
-                                                <option value="" disabled selected>-- Select Routing --</option>
-                                                <option value="ALTO">ALTO</option>
-                                                <option value="ARTAJASA">ARTAJASA</option>
-                                            </select>
-                                        </div>
-                                        <div class="mb-2">
-                                            <label for="claim_entry_boa" class="form-label">Claim Entry BOA</label>
-                                            <select class="form-control" id="claim_entry_boa" name="claim_entry_boa"
-                                                required>
-                                                <option value="" disabled selected>-- Select BOA --</option>
-                                                <option value="Solved">Solved</option>
-                                                <option value="Rejected">Rejected</option>
-                                                <option value="On Process">On Process</option>
-                                            </select>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="remarks" class="form-label"></label>
-                                            <input type="text" class="form-control" id="remarks" name="remarks"
-                                                placeholder="Remarks" required />
-                                        </div>
-                                        <!-- btn submit -->
-                                        <div class="row">
-                                            <div class="">
-                                                <button type="submit" class="btn btn-primary">Submit</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- upload -->
-                        <!-- <label for="">Upload proof of transaction</label>
-                                    <div class="input-group mb-3">
-                                        <input type="file" class="form-control" id="fileRight" required/>
-                                        <label class="input-group-text" for="fileRight">Upload</label>
-                                    </div> -->
-                        <!-- button -->
-                    </form>
+        <!-- KIRI -->
+        <div class="col-md-6">
+          <div class="card card-body shadow-sm">
+            <div class="mb-2">
+              <label for="claim_id">Claim ID (Auto Generate)</label>
+              <input type="text" name="claim_id" class="form-control" value="{{ next_id }}" readonly>
+            </div>
 
-                    <script>
-        // Fungsi tambah hari kerja (skip Sabtu & Minggu)
-        function addBusinessDays(startDate, days) {
-            let date = new Date(startDate);
-            let count = 0;
-            while (count < days) {
-                date.setDate(date.getDate() + 1);
-                if (date.getDay() !== 0 && date.getDay() !== 6) {
-                    count++;
-                }
-            }
-            return date.toISOString().split('T')[0];
-        }
+            <div class="mb-2">
+              <label for="claim_status">Claim Status</label>
+              <select name="claim_status" class="form-control" required>
+                <option value="" disabled selected>-- Select Claim Status --</option>
+                <option value="Solved">Solved</option>
+                <option value="Reject">Reject</option>
+                <option value="Closed by Acquirer">Closed by Acquirer</option>
+                <option value="Already Web Claim">Already Web Claim</option>
+                <option value="Closed Success">Closed Success</option>
+                <option value="Active">Active</option>
+                <option value="Close by System">Close by System</option>
+                <option value="Already Email Claim">Already Email Claim</option>
+                <option value="Already Pro-Active">Already Pro-Active</option>
+                <option value="Cancelled by Acq">Cancelled by Acq</option>
+                <option value="On Process">On Process</option>
+                <option value="Not Yet Inputed">Not Yet Inputed</option>
+                <option value="Process on Next Day">Process on Next Day</option>
+                <option value="Change to be Re-Active">Change to be Re-Active</option>
+                <option value="Rejected by Acq">Rejected by Acq</option>
+                <option value="Pending Investigation">Pending Investigation</option>
+                <option value="Waiting Approve">Waiting Approve</option>
+                <option value="Waiting Reject">Waiting Reject</option>
+                <option value="Cancelled by ALTO">Cancelled by ALTO</option>
+                <option value="Duplicate/Double">Duplicate/Double</option>
+                <option value="Crosscheck">Crosscheck</option>
+                                          
+              </select>
+            </div>
 
-        // Hitung due date otomatis saat claim_date berubah
-        document.getElementById('claim_date').addEventListener('change', function () {
-            const claimDate = this.value;
-            if (claimDate) {
-                const dueDate = addBusinessDays(claimDate, 3);
-                document.getElementById('due_date').value = dueDate;
-            } else {
-                document.getElementById('due_date').value = '';
-            }
+            <div class="mb-2">
+              <label for="claim_number">Claim Number</label>
+              <input type="text" name="claim_number" class="form-control">
+            </div>
+
+            <div class="mb-2">
+              <label for="claim_type">Claim Type</label>
+              <select name="claim_type" id="claim_type" class="form-control" required>
+                <option value="" disabled selected>-- Select Claim Type --</option>
+                <option value="Web Claim">Web Claim</option>
+                <option value="Web Claim AJ">Web Claim AJ</option>
+                <option value="Pro-active Claim">Pro-active Claim</option>
+              </select>
+            </div>
+
+            <div class="mb-2">
+              <label for="claim_date">Claim Date</label>
+              <input type="date" name="claim_date" id="claim_date" class="form-control" required>
+            </div>
+
+            <div class="mb-2">
+              <label for="due_date">Due Date</label>
+              <input type="date" name="due_date" id="due_date" class="form-control" readonly>
+            </div>
+
+            <div class="mb-2">
+              <label for="claim_inisiator">Claim Inisiator</label>
+              <input type="text" name="claim_inisiator" id="claim_inisiator" class="form-control">
+            </div>
+
+            <div class="mb-2">
+              <label for="terminal">Terminal ID</label>
+              <input type="text" name="terminal" class="form-control" required>
+            </div>
+
+            <div class="mb-2">
+              <label for="no_acq">No. Acquirer</label>
+              <input type="text" name="no_acq" class="form-control" required>
+            </div>
+
+            <div class="mb-2">
+              <label for="no_pan">No. PAN</label>
+              <input type="text" name="no_pan" class="form-control" maxlength="16" pattern="\d{16}" required>
+            </div>
+
+            <div class="mb-2">
+              <label for="no_receipt">No. Resi</label>
+              <input type="text" name="no_receipt" class="form-control">
+            </div>
+
+            <div class="mb-2">
+              <label for="trx_date">Transaction Date</label>
+              <input type="date" name="trx_date" class="form-control" required>
+            </div>
+
+            <div class="mb-2">
+              <label for="trx_time">Transaction Time</label>
+              <input type="time" name="trx_time" class="form-control" step="1" required>
+            </div>
+          </div>
+        </div>
+
+        <!-- KANAN -->
+        <div class="col-md-6">
+          <div class="card card-body shadow-sm">
+            
+            <div class="mb-2">
+              <label for="trx_amount">Transaction Amount</label>
+              <input type="number" name="trx_amount" class="form-control" step="50000" min="0" required>
+              <small class="text-muted">Jumlah: {{ format_rupiah(claim.trx_amount) }}</small>
+            </div>
+
+            <div class="mb-2">
+              <label for="description">Description</label>
+              <input type="text" name="description" class="form-control">
+            </div>
+
+            <div class="mb-2">
+              <label for="user">User</label>
+              <input type="text" name="user" class="form-control" readonly>
+            </div>
+
+            <div class="mb-2">
+              <label for="reference">Reference</label>
+              <input type="text" name="reference" class="form-control">
+            </div>
+
+            <div class="mb-2">
+              <label for="week_report">Week Report</label>
+              <input type="text" name="week_report" class="form-control">
+            </div>
+
+            <div class="mb-2">
+              <label for="close_claim">Close Claim</label>
+              <input type="date" name="close_claim" class="form-control">
+            </div>
+
+            <div class="mb-2">
+              <label for="bin">BIN</label>
+              <input type="text" name="bin" class="form-control">
+            </div>
+
+            <div class="mb-2">
+              <label for="error_code">Error Code</label>
+              <select name="error_code" class="form-control" required>
+                <option value="">-- Pilih Error Code --</option>
+                <option value="E*2 M-00">E*2 M-00 - Operation successful but no bills were dispensed</option>
+                <option value="E*2 M-10">E*2 M-10 - Operation not attempted due to previous failure</option>
+                <option value="E*2 M-13">E*2 M-13 - Possible vandalism or customer tampering, Exit shutter jammed open</option>
+                <option value="E*3 M-13">E*3 M-13 - Faulty dispense (unknown quantity), Exit shutter jammed open</option>
+                <option value="E*3 M-14">E*3 M-14 - Faulty dispense (unknown quantity), Exit shutter jammed closed</option>
+                <option value="E*4 M-00">E*4 M-00 - No bills or card not ejected before dispense</option>
+                <option value="E*4 M-13">E*4 M-13 - Exit shutter jammed open (possible vandalism)</option>
+                <option value="E*4 M-19">E*4 M-19 - Exit sensor blocked (bills may be in slot)</option>
+                <option value="E*5 M-00, PRESENTER ERROR">E*5 M-00, PRESENTER ERROR - Bills not taken and retracted</option>
+                <option value="Host Timeout">Host Timeout - Server/device took too long to respond (possible reversal)</option>
+                <option value="D*0 M-18, D*2 M-18, Host Timeout">D*0 M-18, D*2 M-18, Host Timeout - Card Reader + Hosting Error (possible reversal)</option>
+                <option value="D*0 M-13, D*2 M-13, Host Timeout">D*0 M-13, D*2 M-13, Host Timeout - Card Reader + Hosting Error (possible vandalism)</option>
+                <option value="Power Interruption">Power Interruption - Power outage (possible reversal or vandalism)</option>
+              </select>
+            </div>
+            <div class="mb-2">
+              <label for="routing">Routing</label>
+              <select name="routing" class="form-control">
+                <option value="">-- Pilih Routing --</option>
+                <option value="ALTO">ALTO</option>
+                <option value="ARTAJASA">ARTAJASA</option>
+              </select>
+            </div>
+
+            <div class="mb-2">
+              <label for="claim_entry_boa">Claim Entry BOA</label>
+              <select name="claim_entry_boa" class="form-control">
+                <option value="Solved">Solved</option>
+                <option value="On Process">On Process</option>
+                <option value="Rejected">Rejected</option>
+              </select>
+            </div>
+
+            <div class="mb-2">
+              <label for="remarks">Remarks</label>
+              <textarea name="remarks" class="form-control" rows="2"></textarea>
+            </div>
+
+            <div class="mb-2">
+              <label for="approved_by">Approved By</label>
+              <input type="text" name="approved_by" class="form-control" readonly>
+            </div>
+
+            <div class="mb-2">
+              <label for="approved_at">Approved At</label>
+              <input type="datetime-local" name="approved_at" class="form-control" readonly>
+            </div>
+
+            <div class="text-end">
+              <button type="submit" class="btn btn-primary">Simpan</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </form>
+  </div>
+</main>
+
+<!-- Script: Auto Due Date dan Inisiator -->
+<script>
+  function addBusinessDays(startDate, days) {
+    let date = new Date(startDate);
+    let count = 0;
+    while (count < days) {
+      date.setDate(date.getDate() + 1);
+      if (date.getDay() !== 0 && date.getDay() !== 6) {
+        count++;
+      }
+    }
+    return date.toISOString().split('T')[0];
+  }
+
+  async function updateClaimFields() {
+    const type = document.getElementById('claim_type').value;
+    const date = document.getElementById('claim_date').value;
+
+    if (date) {
+      document.getElementById('due_date').value = addBusinessDays(date, 3);
+    } else {
+      document.getElementById('due_date').value = '';
+    }
+
+    if (type === "Pro-active Claim" && date) {
+      try {
+        const res = await fetch("/generate_inisiator", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ claim_type: type, claim_date: date })
         });
+        const data = await res.json();
+        document.getElementById('claim_inisiator').value = data.inisiator || '';
+      } catch (e) {
+        console.error("Gagal ambil inisiator:", e);
+        document.getElementById('claim_inisiator').value = '';
+      }
+    }
+  }
 
-        // Otomatis isi claim_inisiator saat pilih tipe Pro Active Claim
-        document.getElementById('claim_type').addEventListener('change', function () {
-            const claimType = this.value;
-            if (claimType === "Pro Active Claim") {
-                const today = new Date();
-                const dd = String(today.getDate()).padStart(2, '0');
-                const mm = String(today.getMonth() + 1).padStart(2, '0');
-                const yy = String(today.getFullYear()).slice(2, 4);
-                const generated = `004205/ATMi-Klaim/${dd}/${mm}/${yy}`;
-                document.getElementById('claim_inisiator').value = generated;
-            } else {
-                // Kalau bukan Pro Active Claim, biarkan manual isi, jangan reset otomatis
-                // Jadi tidak melakukan apapun di sini
-            }
-        });
-    </script>
+  document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById('claim_type').addEventListener('change', updateClaimFields);
+    document.getElementById('claim_date').addEventListener('change', updateClaimFields);
+  });
+</script>
 
-
-    </main>
-    <!--end::App Main-->
-
-    {% include 'footer.html' %}
+{% include 'footer.html' %}

@@ -1,0 +1,74 @@
+{% include 'header.html' %}
+
+<main class="app-main" style="display: flex;">
+  <div class="app-content-header">
+    <div class="container-fluid">
+      <!-- Header -->
+      <div class="row align-items-center mb-3">
+        <div class="col-md-6">
+          <h3 class="mb-0">Klaim dengan Status: {{ status }}</h3>
+        </div>
+        <div class="col-md-6 text-end">
+          <a href="/export?status={{ status }}" class="btn btn-sm btn-success">
+            <i class="bi bi-download me-1"></i> Export Excel
+          </a>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="card shadow-sm">
+        <div class="card-body table-responsive">
+          <table class="table table-bordered table-hover align-middle text-center table-striped">
+            <thead class="table-primary">
+              <tr>
+                <th>Claim ID</th>
+                <th>Claim Status</th>
+                <th>Claim Number</th>
+                <th>Inisiator</th>
+                <th>Type</th>
+                <th>Terminal</th>
+                <th>No Acq</th>
+                <th>PAN</th>
+                <th>Trx Date</th>
+                <th>Due Date</th>
+                <th>Amount</th>
+                <th>User</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for rs in data %}
+              <tr>
+                <td>{{ rs.claim_id }}</td>
+                <td><span class="badge {{ status_class(rs.claim_status) }}">{{ rs.claim_status }}</span></td>
+                <td>{{ rs.claim_number }}</td>
+                <td>{{ rs.claim_inisiator }}</td>
+                <td>{{ rs.claim_type }}</td>
+                <td>{{ rs.terminal }}</td>
+                <td>{{ rs.no_acq }}</td>
+                <td>{{ rs.no_pan }}</td>
+                <td>{{ rs.trx_date }}</td>
+                <td>{{ rs.due_date }}</td>
+                <td>{{ "{:,.0f}".format(rs.trx_amount) }}</td>
+                <td>{{ rs.user_id }}</td>
+                <td>
+                  <a href="{{ url_for('klaim.update', claim_id=rs.claim_id) }}" class="btn btn-sm btn-warning">
+                    <i class="bi bi-pencil-square"></i> Edit
+                  </a>
+                </td>
+
+              </tr>
+              {% else %}
+              <tr>
+                <td colspan="13" class="text-muted">Tidak ada data klaim untuk status ini.</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+{% include 'footer.html' %}
